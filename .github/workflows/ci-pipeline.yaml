@@ -1,0 +1,26 @@
+name: Build sample Java Maven project
+ 
+on: 
+  push:
+    branches:
+      - dev
+      - master
+      - feature/**
+      - '!evil_branch'
+
+jobs:
+  mvn_test:
+    name: Java ${{ matrix.java }} tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # test against java 8 and 11 ... because we can
+        java: [8, 11]
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup java
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ matrix.java }}
+    - name: Run Maven
+      run: mvn -B -f pom.xml clean test
