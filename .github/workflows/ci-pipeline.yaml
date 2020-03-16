@@ -23,4 +23,5 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
     - name: Run Maven
-      run: mvn -B -f pom.xml clean test
+      # erstmal nur compile statt test .. sind keine tests da ;)
+      run: mvn -B -f pom.xml clean compile
