@@ -45,7 +45,7 @@ jobs:
       with:
         name: artifact
         # TODO generic path!
-        path: target/hello-fintegra-1.0-SNAPSHOT.jar
+        path: target/integra-hello-1.0-SNAPSHOT.jar
   docker_build:
     name: Build Docker image and distribute to GCR
     runs-on: ubuntu-latest
@@ -59,6 +59,15 @@ jobs:
     - name: Build Docker container
       run: |
         mkdir buildroot
-        mv artifact/hello-fintegra-1.0-SNAPSHOT.jar buildroot
+        mv artifact/fintegra-hello-1.0-SNAPSHOT.jar buildroot
         mv Dockerfile buildroot
-        docker build buildroot
+        docker build -t fintegra-hello:latest buildroot
+    - name: "Pushing to GCR"
+      uses: raccoondev/push-docker-gcr
+      with:
+        gcr_host: eu.gcr.io
+        image_name: fintegra-hello
+        image_tag: latest
+        env:
+          GCLOUD_SERVICE_KEY: ${{ secrets.GCLOUD_SERVICE_KEY }}
+          GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
