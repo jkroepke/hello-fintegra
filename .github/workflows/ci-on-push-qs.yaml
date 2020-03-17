@@ -1,12 +1,9 @@
-name: Build sample Java Maven project
+name: Build fintegra-hello app
  
 on: 
   push:
     branches:
-      - dev
       - master
-      - feature/**
-      - '!evil_branch'
 
 jobs:
   compile:
@@ -43,14 +40,12 @@ jobs:
         java-version: 11
     - name: Build and test project
       run: mvn -B -f pom.xml clean verify
-    - name: DEBUG
-      run: find .
     - name: Save artifact for use in next job
       uses: actions/upload-artifact@v1
       with:
         name: artifact
         # TODO generic path!
-        path: target/hello-fintegra-1.0.jar.jar
+        path: target/hello-fintegra-1.0-SNAPSHOT.jar
   docker_build:
     name: Build Docker image and distribute to GCR
     runs-on: ubuntu-latest
@@ -62,4 +57,8 @@ jobs:
       with:
         name: artifact
     - name: Build Docker container
-      run: find .
+      run: |
+        mkdir buildroot
+        mv artifact/hello-fintegra-1.0-SNAPSHOT.jar buildroot
+        mv Dockerfile buildroot
+        docker build buildroot
