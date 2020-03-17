@@ -59,4 +59,5 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: artifact
+    - name: Build Docker container
       run: find .
